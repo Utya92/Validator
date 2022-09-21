@@ -8,55 +8,43 @@ use source\rules\bridge\AbstractRulesBridge;
 
 class Validator {
 
-    public AbstractRulesBridge $rulesObject;
 
-    protected bool $multipleMode = false;
+    private AbstractRulesBridge $abstractRulesBridge;
+    //- правило для валидации
+//    private $rule;
 
-    private string $rule;
-
-    private array $validators = [];
-
-    public function __construct() {
-        $arguments = func_get_args();
-        $numberOfArguments = func_num_args();
-        if (method_exists($this, $function =
-            'ConstructorWithArgument' . $numberOfArguments)) {
-            call_user_func_array(
-                array($this, $function), $arguments);
-        }
-    }
-
-    public function ConstructorWithArgument1(string $rule) {
-        $this->rule = $rule;
-        $this->initialize();
-    }
-
-    public function ConstructorWithArgument2(string $rule, string $param) {
-        $this->rule = $rule;
-        $this->validators["params"] = $param;
-        $this->initialize();
-    }
-
-    public function ConstructorWithArgument3(string $value, bool $multipleMode, array $arr) {
-        $this->multipleMode = $multipleMode;
+    //тут будет хранится строковое представление
+//класса валидации
+    private $validator;
+    private $param;
 
 
-    }
+    //массив с входящими данными
+    public $valueForValidation;
 
 
-    function initialize(): bool {
-        $className = "source\\rules\\$this->rule";
-        if (class_exists($className)) {
-            $this->rulesObject = new $className(); //object(source\rules\MinLength)#3 (0) { } 1
-            return true;
-        }
-        echo "such type >$this->rule< not found.. ";
-        //в дальнейшем переделать на exception
-        return false;
+    public function __construct($validator, $param = '') {
+        $this->validator = $validator;
+        $this->param = $param;
+
     }
 
     function exec($value): bool {
-        return $this->rulesObject->validate($value, array_pop($this->validators));
+        $this->valueForValidation = $value;
+        return $this->initialize();
     }
+
+
+/// new source\rules\MinLength(3)
+
+    function initialize(): bool {
+        $className = "source\\rules\\$this->validator";
+        if (class_exists($className)) {
+            $obj = $this->abstractRulesBridge = new $className($this->valueForValidation, $this->param); //object(source\rules\MinLength)#3 (0) { } 1
+            return $obj->validate();
+        }
+        return false;
+    }
+
 
 }

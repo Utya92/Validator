@@ -7,8 +7,20 @@ use source\rules\bridge\AbstractRulesBridge;
 
 class Regexp extends AbstractRulesBridge {
 
-    public function validate($value, $expression): bool {
-        return preg_match($expression, $value);
+    private $expression;
+    private $value;
 
+    /**
+     * @param $expression
+     * @param $value
+     */
+    public function __construct($expression, $value) {
+        $this->expression = $expression;
+        $this->value = $value;
+    }
+
+
+    public function validate(): bool {
+        return preg_match($this->value, $this->expression);
     }
 }

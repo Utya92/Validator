@@ -7,7 +7,20 @@ use source\rules\bridge\AbstractRulesBridge;
 
 class In extends AbstractRulesBridge {
 
-    public function validate($searchValue, $array): bool {
-        return in_array($array, $searchValue);
+    public $searchValue;
+    public $array;
+
+    /**
+     * @param $searchValue
+     * @param $array
+     */
+    public function __construct($searchValue, $array) {
+        $this->searchValue = $searchValue;
+        $this->array = $array;
+    }
+
+
+    public function validate(): bool {
+        return in_array($this->array, $this->searchValue);
     }
 }
