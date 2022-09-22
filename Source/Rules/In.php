@@ -10,10 +10,7 @@ class In extends AbstractRulesBridge {
     public $searchValue;
     public $array;
 
-    /**
-     * @param $searchValue
-     * @param $array
-     */
+
     public function __construct($searchValue, $array) {
         $this->searchValue = $searchValue;
         $this->array = $array;

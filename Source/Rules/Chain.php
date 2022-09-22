@@ -4,40 +4,28 @@ namespace source\rules;
 
 
 use source\rules\bridge\AbstractRulesBridge;
+use source\Validator;
 
-class Chain {
-//(new Chain())
-//->add(new MinLength(3))
-//->add(new MaxLength(5))
-    public AbstractRulesBridge $abstractRulesBridge;
+class Chain extends AbstractRulesBridge {
 
-    private $value;
+    public bool $flag;
+    public bool $isValid;
 
-    public bool $result;
-
-    public array $rulesContainer;
-
-    public function add(string $validator, $param = ''): Chain {
-        $this->rulesContainer[$validator] = $param;
-        return $this;
+    public function __construct($flag, $classValidators) {
+        $this->flag = $flag;
+        $this->isValid = $classValidators;
     }
 
-    public function exec($value) {
-        $res = true;
-        $this->value = $value;
-        foreach ($this->rulesContainer as $key => $val) {
-            $className = "source\\rules\\$key";
-            $obj = $this->abstractRulesBridge = new $className($value, $val);
-            if (!$obj->validate()) {
-                $res = false;
-                break;
+    public function validate(): bool {
+        foreach (Validator::$resultsArr as $item) {
+            if ($item !== $this->flag) {
+                echo "not valid";
+                return false;
+            } else {
+                echo "valid";
+                return true;
             }
         }
-        if ($res) {
-            echo "valid";
-        }else{
-            echo "not valid";
-        }
-        return $res;
+        return false;
     }
 }

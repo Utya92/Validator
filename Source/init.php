@@ -12,7 +12,6 @@ spl_autoload_register(function ($class) {
     }
 });
 
-
 //$valid = new Validator('in', "text");
 //$arr = ["opira","opira",'text'];
 //echo $valid->exec($arr);
@@ -22,7 +21,7 @@ spl_autoload_register(function ($class) {
 //
 //
 //$valid = new Validator('minlength', 5);
-//echo $valid->exec("asx");
+//echo $valid->exec("obema");
 
 //
 //$valid = new Validator('test', true, [
@@ -30,21 +29,28 @@ spl_autoload_register(function ($class) {
 //    new Validator('regexp', '/test/'),
 //    new Validator('email')]);
 
-//
+
 //$valid = new Validator('email');
 //echo $valid->exec("test@gmail.com");
 //
-//$valid = new Validator('minlength', '5');
-//
+//$valid = new Validator('minlength', '5');  //всё что меньше - не тру
+//echo $valid->exec("opiara");
 //$valid = new Validator('in', "text");
 //
 //$valid = new Validator('regexp', '/test/');
 
 
-(new Chain())
-    ->add('minlength', 15)
-    ->add("email")
-    ->add("regexp",'/test@gmail.com/')
-    ->exec("test@gmail.com");
+//(new Chain())
+//    ->add('minlength', 15)
+//    ->add("email")
+//    ->add("regexp",'/test@gmail.com/')
+//    ->exec("test@gmail.com");
+//
+//
 
+//$valid = new Validator('chain', true, [(new Validator('minlength', 5))->exec("opira")]);
 
+$valid = new Validator('chain', true, [new Validator('minlength', 5),
+    new Validator('email')
+]);
+$valid->exec("utya@mail.quack");

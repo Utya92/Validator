@@ -8,43 +8,43 @@ use source\rules\bridge\AbstractRulesBridge;
 
 class Validator {
 
-
     private AbstractRulesBridge $abstractRulesBridge;
-    //- правило для валидации
-//    private $rule;
-
-    //тут будет хранится строковое представление
-//класса валидации
     private $validator;
-    private $param;
+    private $param1;
+    private $param2;
+    
+    public static array $resultsArr;
 
+    public static $valueForValidation;
 
-    //массив с входящими данными
-    public $valueForValidation;
-
-
-    public function __construct($validator, $param = '') {
+    public function __construct($validator, $param1 = '', $param2 = '') {
         $this->validator = $validator;
-        $this->param = $param;
-
+        $this->param1 = $param1;
+        $this->param2 = $param2;
     }
 
     function exec($value): bool {
-        $this->valueForValidation = $value;
+        Validator::$valueForValidation = $value;
         return $this->initialize();
     }
 
-
-/// new source\rules\MinLength(3)
-
     function initialize(): bool {
         $className = "source\\rules\\$this->validator";
-        if (class_exists($className)) {
-            $obj = $this->abstractRulesBridge = new $className($this->valueForValidation, $this->param); //object(source\rules\MinLength)#3 (0) { } 1
+        if (class_exists($className) && strtolower($this->validator) != 'chain') {
+            $obj = $this->abstractRulesBridge = new $className(Validator::$valueForValidation, $this->param1, $this->param2); //object(source\rules\MinLength)#3 (0) { } 1
+            return $obj->validate();
+        }
+        if (class_exists($className) && strtolower($this->validator) == 'chain') {
+            $obj = $this->abstractRulesBridge = new $className(Validator::$valueForValidation, $this->param1, $this->param2); //object(source\rules\MinLength)#3 (0) { } 1
+            foreach ($this->param2 as $i) {
+                $vars = get_object_vars($i);
+                $shortName = $vars['validator'];
+                $chainClassName = "source\\rules\\$shortName";
+                $chainObj = $this->abstractRulesBridge = new $chainClassName(Validator::$valueForValidation, $vars['param1'], $vars['param2']);
+                Validator::$resultsArr[] = $chainObj->validate();
+            }
             return $obj->validate();
         }
         return false;
     }
-
-
 }

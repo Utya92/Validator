@@ -10,10 +10,6 @@ class Regexp extends AbstractRulesBridge {
     private $expression;
     private $value;
 
-    /**
-     * @param $expression
-     * @param $value
-     */
     public function __construct($expression, $value) {
         $this->expression = $expression;
         $this->value = $value;
